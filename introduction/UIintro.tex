@@ -1,0 +1,163 @@
+% UIintro.tex
+% (c) 2018 by the authors
+\documentclass{article}
+
+\usepackage{amsmath}
+
+\title{An introduction to information decompositions}
+
+\author{Johannes Rauh, \dots}
+
+\begin{document}
+
+\maketitle{}
+
+\tableofcontents{}
+
+\section{Information theory}
+\label{sec:infotheory}
+
+\section{Bivariate information decompositions}
+\label{sec:infodeco}
+
+When Shannon proposed to use entropy in order to quantify information, he had in mind a very restricted setting of
+communication over a noisy channel~\cite{Shannon48:A_Mathematical_Theory_of_Communication}.  Since then, the use of entropic quantities as measures of information has been
+greatly expanded, and they are nowadys used successfully in a large variety of applications, such as statistical
+physics, the study of complex systems, analysis of neural networks, and machine learning \cite{}.
+In particular, transfer entropy is used as a tool to study causality in dynamic systems \cite{}, and
+mutual information is used successfully as a selection criterion in feature selection \cite{}.
+
+In many applications, the effort of estimating and approximating entropic quantities (which is far from negligeable) is
+out-weighed by the performance benefit.
+
+Despite this huge success of information theory, there are still many open questions about the nature of information.
+In particular, since information is not a conservation quantity, it is difficult to describe how information is
+distributed over composite systems.  Clearly, different subsystems may have exclusive information, or they may have
+redundant information.  Third, synergy effects complicate the analysis: It may happen that some information is not known
+to any subsystem, but can only be reconstructed from the knowledge of the complete system.  An example is the
+digit sum of an integer, which can only be computed when all digits are known.  Such synergy effects are used
+heavily in cryptography, where the goal is that the encrypted message alone contains no information about the original
+message without knowing the key.
+
+So far, there is no consensus on how to define information quantities that describe the unique, shared and synergistic
+proportion of joint information, even though there have been several proposals: For example, the
+co-information~\cite{Bell2003:Coinformation}
+\begin{equation*}
+  CoI(S;X;Y) := I(S:X) - I(S:X|Y),
+\end{equation*}
+which equals the negative interaction information~\cite{McGill54:interaction-information}, has been proposed as a
+measure of shared and synergistic information: If $CoI(S;X;Y)>0$, then $X$ and $Y$ carry redundant information about~$S$
+(knowing $Y$ decreases the mutual information between $S$ and~$X$), and if $CoI(S;X;Y)>0$, then $X$ and $Y$ carry
+synergistic information about~$S$ (the knowledge of $Y$ increases the mutual information between $S$ and~$X$).  However,
+it is generally agreed that redundancy and synergy effects can coexist, and in this case the co-information can only
+measure which of these two effects is larger.
+
+As another example, the conditional mutual information $I(S:X|Y)$ is often used to measure the influence of $X$ on~$S$,
+discounting for the influence of $Y$ on~$S$.  For instance, in the context of a stochastic dynamical system of three
+random variables $(X_{t},Y_{t},S_{t})_{t=0}^{\infty}$, the transfer entropy takes the form of a conditional mutual
+information:
+\begin{equation*}
+  I(S_{t}:X_{t}|Y_{0},\dots,Y_{t}).
+\end{equation*}
+The goal of the transfer entropy is to measure the influence of the value of $X$ at time~$t$ on the value of $S$ at
+time~$t$, discounting for the influence of the past of $Y$ on~$S$.  This influence is sometimes even interpreted as a
+causal effect.  However, it has been noted that the transfer entropy also includes synergistic effects, and this is true
+more generally for the conditional mutual information $I(S:X|Y)$: If $X$ and~$Y$ are both independent of $S$ but
+together interact synergistically to produce~$S$, then the conditional mutual information will be large.  In such a
+case, the sum % of the two transfer entropies
+\begin{equation*}
+%  T(X\to S|Y)_{t} + T(Y\to S|X)_{t}
+  I(S:X|Y) + I(S:Y|X)
+\end{equation*}
+will double-count this synergistic effect and may be larger than $I(S:X,Y)$ (and thus overestimate the total effect that
+$X$ and $Y$ have on~$S$).  This second example is related to the first example, as
+% Under the assumption that $S,X,Y$ are independent of $Y_{0},\dots,Y_{t}$ and independent of $X_{0},\dots,X_{t}$, then
+\begin{equation*}
+%  T(X\to S|Y)_{t} + T(Y\to S|X)_{t} =
+  I(S:X|Y) + I(S:Y|X)
+  = I(S:X,Y) - CoI(S;X;Y).
+\end{equation*}
+
+A lot of research has focussed on finding an information measure for a single aspect, most notably a measure for
+synergy~\cite{}.  The seminal paper~\cite{WilliamsBeer:Nonneg_Decomposition_of_Multiinformation} proposed a more
+principled approach, namely to find a complete decomposition of the total mutual information $I(S:X_{1},\dots,X_{k})$
+about a signal~$S$ that is distributed among a family of random variables~$X_{1},\dots,X_{k}$ into a sum of non-negative
+terms with a well-defined interpretation corresponding to the different ways in which information can have aspects of
+redundancy, unique or synergistic information.  In the case~$k=2$ (called the \emph{bivariate case}), the decomposition is of the form
+\begin{subequations}
+  \begin{multline}
+  I(S;X_1X_2) = \underbrace {{SI}(S;X_1,X_2)}_{\text{shared}} + \underbrace {CI(S; X_1,X_2)}_{\text{complementary}} \\
+  + \underbrace {UI(S;X_1\backslash X_2)}_{\text{unique ($X_1$ wrt $X_2$)}} + \underbrace {UI(S;X_2\backslash X_1)}_{\text{unique ($X_2$ wrt $X_1$)}}, \label{eq:bivariate1}
+\end{multline}
+where $SI(S;X_{1},X_{2})$, $UI(S;X_{1}\backslash X_{2})$, $UI(S;X_{2}\backslash X_{1})$, and $CI(S;X_{1},X_{2})$ are nonnegative\footnote{Information decompositions with negative terms have also been proposed, although their interpretation is much more difficult \cite{}.} functions that depend continuously\footnote{Non-continous information decompositions have also been proposed, see \cite{}.} on the joint distribution of $(S,X_{1},X_{2})$.
+Furthermore, these functions are required to satisfy
+\begin{align}
+    I(S;X_1) &= SI(S;X_1,X_2) + UI(S;X_1\backslash X_2),  \label{eq:bivariate2}\\
+    I(S;X_2) &= SI(S;X_1,X_2) + UI(S;X_2\backslash X_1).  \label{eq:bivariate3}
+\end{align}
+\end{subequations}
+
+Combining these equations, it follows, that the co-information can be written as the difference of redundant and synergistic information:
+\begin{equation*}
+  CoI(S;X_1,X_2) = I(S;X_1) - I(S;X_1|X_2)
+  = SI(S;X_1,X_2) - CI(S; X_1,X_2). 
+\end{equation*}
+which agrees with the intuition developed above.  Moreover, the conditional mutual information satisfies
+\begin{equation*}
+  I(S;X_1|X_2) = I(S;X_{1}X_{2}) - I(S;X_{2})
+  = CI(S;X_1,X_2) + UI(S;X_1\backslash X_2),
+\end{equation*}
+which, again, agrees with what has been said above.
+
+While the framework of~\cite{WilliamsBeer:Nonneg_Decomposition_of_Multiinformation} is intriguing, so far, there is no
+consensus on the definition of the corresponding functions for shared, unique and synergistic information.  Here, we
+follow the approach from~\cite{BROJA13:Quantifying_unique_information} and use the functions $SI$, $UI$ and~$CI$ defined
+there.  Note that this approach only covers the case~$k=2$.  We will see that even this case proves useful\dots
+
+At this point one can ask whether information decompositions can only provide theoretical insight, or whether sensible
+information measures $SI$, $UI$ and~$CI$ are useful in applications.  To argue for the second answer, let us focus on
+the example of feature selection.  Suppose that the task is to predict a classification variable $C$, using a subset of
+some larger set of features $\{F_{i}\}$.  Suppose that features $F_{1},\dots,F_{k}$ have already been selected and that
+we are looking for the next best feature $F_{k}$ to add to our list.  A common information-theoretic criterion suggests
+to add the feature $F$ that maximizes the mutual information~$I(C:F_{1},\dots,F_{k},F)$.  Equivalently, using the chain
+rule, one can maximize the conditional mutual information $I(C:F|F_{1},\dots,F_{k})$.  As explained above, this
+conditional mutual information measures the information that $F$ has about~$C$ in the presence of~$F_{1},\dots,F_{k}$,
+and it contains unique aspects as well as synergistic aspects:
+\begin{equation*}
+  I(C:F|F_{1}\dots F_{k}) = UI(C:F\setminus F_{1}\dots F_{k}) + CI(C;F, (F_{1}\dots F_{k}))
+\end{equation*}
+One could say that this is good, since both the unique contribution as well as the synergistig contribution are wellcome
+contributions on the way to increase the total mutual information about~$C$.  However, we argue that there are instances
+where it is better to optimize just the unique contribution.  The motivation comes from secondary objectives in feature
+selection, beyond striving to minimize the prediction error: Namely, we claim that a system that largely relies on
+synergistic effects tends to be much more complicated to understand and much less robust.
+
+The first claim is easy to explain: A common definition of complexity states that a composite system is complex if it is
+``more than the sum of its parts,'' that is, if its parts interact synergistically together.
+
+The second claim arguably depends on the setting, as is often true in robustness analysis, where any measure of
+robustness depends on the possible perturbations that one has in mind.  We believe that the claim is true in the setting
+where features are perturbed independently of each other.  For example, when the features are extracted from noisy data,
+the value of each feature is found correctly only with a certain probability.  If the features contribute separately to
+the classification, then each correctly identified feature improves the prediction.  However, when several features
+interact synergistically, then an error in the identification of one of these features makes the values of all features
+unhelpful.
+
+\section{Unique information from decision problems}
+\label{sec:UIBROJA}
+
+\section{Alternative information decompositions}
+\label{sec:alt_infodeco}
+
+\section{Properties of information decompositions}
+\label{sec:properties}
+
+\bibliographystyle{IEEEtranS}
+\bibliography{infodeco}
+
+\end{document}
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: t
+%%% End: 
