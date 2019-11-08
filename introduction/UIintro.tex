@@ -43,7 +43,7 @@ So far, there is no consensus on how to define information quantities that descr
 proportion of joint information, even though there have been several proposals: For example, the
 co-information~\cite{Bell2003:Coinformation}
 \begin{equation*}
-  CoI(S;X;Y) := I(S:X) - I(S:X|Y),
+  CoI(S;X;Y) := I(S; X) - I(S; X|Y),
 \end{equation*}
 which equals the negative interaction information~\cite{McGill54:interaction-information}, has been proposed as a
 measure of shared and synergistic information: If $CoI(S;X;Y)>0$, then $X$ and $Y$ carry redundant information about~$S$
@@ -52,35 +52,35 @@ synergistic information about~$S$ (the knowledge of $Y$ increases the mutual inf
 it is generally agreed that redundancy and synergy effects can coexist, and in this case the co-information can only
 measure which of these two effects is larger.
 
-As another example, the conditional mutual information $I(S:X|Y)$ is often used to measure the influence of $X$ on~$S$,
+As another example, the conditional mutual information $I(S; X|Y)$ is often used to measure the influence of $X$ on~$S$,
 discounting for the influence of $Y$ on~$S$.  For instance, in the context of a stochastic dynamical system of three
 random variables $(X_{t},Y_{t},S_{t})_{t=0}^{\infty}$, the transfer entropy takes the form of a conditional mutual
 information:
 \begin{equation*}
-  I(S_{t}:X_{t}|Y_{0},\dots,Y_{t}).
+  I(S_{t}; X_{t}|Y_{0},\dots,Y_{t}).
 \end{equation*}
 The goal of the transfer entropy is to measure the influence of the value of $X$ at time~$t$ on the value of $S$ at
 time~$t$, discounting for the influence of the past of $Y$ on~$S$.  This influence is sometimes even interpreted as a
 causal effect.  However, it has been noted that the transfer entropy also includes synergistic effects, and this is true
-more generally for the conditional mutual information $I(S:X|Y)$: If $X$ and~$Y$ are both independent of $S$ but
+more generally for the conditional mutual information $I(S; X|Y)$: If $X$ and~$Y$ are both independent of $S$ but
 together interact synergistically to produce~$S$, then the conditional mutual information will be large.  In such a
 case, the sum % of the two transfer entropies
 \begin{equation*}
 %  T(X\to S|Y)_{t} + T(Y\to S|X)_{t}
-  I(S:X|Y) + I(S:Y|X)
+  I(S; X|Y) + I(S; Y|X)
 \end{equation*}
-will double-count this synergistic effect and may be larger than $I(S:X,Y)$ (and thus overestimate the total effect that
+will double-count this synergistic effect and may be larger than $I(S; X,Y)$ (and thus overestimate the total effect that
 $X$ and $Y$ have on~$S$).  This second example is related to the first example, as
 % Under the assumption that $S,X,Y$ are independent of $Y_{0},\dots,Y_{t}$ and independent of $X_{0},\dots,X_{t}$, then
 \begin{equation*}
 %  T(X\to S|Y)_{t} + T(Y\to S|X)_{t} =
-  I(S:X|Y) + I(S:Y|X)
-  = I(S:X,Y) - CoI(S;X;Y).
+  I(S; X|Y) + I(S; Y|X)
+  = I(S; X,Y) - CoI(S;X;Y).
 \end{equation*}
 
 A lot of research has focussed on finding an information measure for a single aspect, most notably a measure for
 synergy~\cite{}.  The seminal paper~\cite{WilliamsBeer:Nonneg_Decomposition_of_Multiinformation} proposed a more
-principled approach, namely to find a complete decomposition of the total mutual information $I(S:X_{1},\dots,X_{k})$
+principled approach, namely to find a complete decomposition of the total mutual information $I(S; X_{1},\dots,X_{k})$
 about a signal~$S$ that is distributed among a family of random variables~$X_{1},\dots,X_{k}$ into a sum of non-negative
 terms with a well-defined interpretation corresponding to the different ways in which information can have aspects of
 redundancy, unique or synergistic information.  In the case~$k=2$ (called the \emph{bivariate case}), the decomposition is of the form
@@ -119,12 +119,12 @@ information measures $SI$, $UI$ and~$CI$ are useful in applications.  To argue f
 the example of feature selection.  Suppose that the task is to predict a classification variable $C$, using a subset of
 some larger set of features $\{F_{i}\}$.  Suppose that features $F_{1},\dots,F_{k}$ have already been selected and that
 we are looking for the next best feature $F_{k}$ to add to our list.  A common information-theoretic criterion suggests
-to add the feature $F$ that maximizes the mutual information~$I(C:F_{1},\dots,F_{k},F)$.  Equivalently, using the chain
-rule, one can maximize the conditional mutual information $I(C:F|F_{1},\dots,F_{k})$.  As explained above, this
+to add the feature $F$ that maximizes the mutual information~$I(C; F_{1},\dots,F_{k},F)$.  Equivalently, using the chain
+rule, one can maximize the conditional mutual information $I(C; F|F_{1},\dots,F_{k})$.  As explained above, this
 conditional mutual information measures the information that $F$ has about~$C$ in the presence of~$F_{1},\dots,F_{k}$,
 and it contains unique aspects as well as synergistic aspects:
 \begin{equation*}
-  I(C:F|F_{1}\dots F_{k}) = UI(C:F\setminus F_{1}\dots F_{k}) + CI(C;F, (F_{1}\dots F_{k}))
+  I(C; F|F_{1}\dots F_{k}) = UI(C; F\setminus F_{1}\dots F_{k}) + CI(C;F, (F_{1}\dots F_{k}))
 \end{equation*}
 One could say that this is good, since both the unique contribution as well as the synergistig contribution are wellcome
 contributions on the way to increase the total mutual information about~$C$.  However, we argue that there are instances
